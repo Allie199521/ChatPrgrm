@@ -1,8 +1,9 @@
 #Client
-#yurrrr
 import socket
 import os
 import platform
+import Elgamal
+#from Crypto.Cipher import AES
 
 host = socket.gethostname()
 #Random port number
@@ -12,6 +13,14 @@ c = socket.socket()
 
 #Connects to the server
 c.connect((host, port))
+
+#recieves public keys from Server
+keys = c.recv(1024).decode()
+
+#splits the keys and places them into an array
+pubkey = keys.split(",")
+#testing
+print(pubkey[0])
 
 #Collects input taken from the client
 message = input("You: ")
