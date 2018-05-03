@@ -27,7 +27,10 @@ print(pubkey[0])
 #Generate private key b with desired bit length
 b = random.randint(1,8)
 gb = pow(int(pubkey[1]),b) % int(pubkey[0])
+
+#testing
 print (gb)
+
 c.send(str(gb).encode())
 
 #Collects input taken from the client
