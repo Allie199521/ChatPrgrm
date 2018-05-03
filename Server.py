@@ -35,7 +35,9 @@ print(gb)
 #Prints out the address of who just got connected
 print("Connection from: " + str(addr))
 
-while 1:
+data = "1"
+
+while data.lower().strip() != 'bye':
         # receive data stream. it won't accept data packet greater than 1024 bytes
     #
     data = conn.recv(1024).decode()
