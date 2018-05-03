@@ -4,7 +4,8 @@ import os
 import platform
 import random
 import Elgamal
-#from Crypto.Cipher import AES
+from Crypto.Cipher import AES
+
 
 host = socket.gethostname()
 #Random port number

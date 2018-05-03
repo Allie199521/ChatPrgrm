@@ -1,6 +1,6 @@
 #Server
 import Elgamal
-#from Crypto.Cipher import AES
+from Crypto.Cipher import AES
 import socket
 import os
 import platform
