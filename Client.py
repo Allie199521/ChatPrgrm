@@ -55,6 +55,6 @@ c.close()
 pf = platform.system()
 
 if(pf == 'Linux' or pf == 'Darwin'):
-	os.system('clear')
+	system('clear')
 else:
-	os.system('cls')
+	system('cls')
