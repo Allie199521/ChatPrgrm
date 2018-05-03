@@ -1,5 +1,4 @@
 #Client
-#yurrrr
 import socket
 import os
 import platform
