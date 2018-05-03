@@ -2,7 +2,7 @@
 import Elgamal
 from Crypto.Cipher import AES
 import socket
-import os
+from os import system 
 import platform
 
 host = socket.gethostname()
