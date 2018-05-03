@@ -1,4 +1,6 @@
 #Server
+import Elgamal
+#from Crypto.Cipher import AES
 import socket
 import os
 import platform
@@ -17,6 +19,15 @@ s.listen(2)
 #Accepts connection to the server
 conn, addr = s.accept()
 
+#Creates keys to be sent to Client once connected
+p,a,g,ga = Elgamal.generateKey(8)
+
+#places keys into a string format seperated by commas
+publickeys = str(p) + "," + str(g) + "," + str(ga)
+
+#sends keys to client
+conn.send(publickeys.encode())
+
 #Prints out the address of who just got connected
 print("Connection from: " + str(addr))
 
@@ -27,14 +38,14 @@ while 1:
     #If no data is recieved, break
     if not data:
         break
-    #Print what the client has sent 
+    #Print what the client has sent
     print("client: " + str(data))
     data = input("You: ")
     #send the data to the client in bytes
     conn.send(data.encode())
 
 #closes connection
-conn.close()  
+conn.close()
 pf = platform.system()
 
 if(pf == 'Linux' or pf == 'Darwin'):
