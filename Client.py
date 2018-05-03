@@ -1,6 +1,6 @@
 #Client
 import socket
-import os
+from os import system
 import platform
 import random
 import Elgamal
