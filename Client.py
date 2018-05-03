@@ -2,6 +2,7 @@
 import socket
 import os
 import platform
+import random
 import Elgamal
 #from Crypto.Cipher import AES
 
@@ -19,8 +20,15 @@ keys = c.recv(1024).decode()
 
 #splits the keys and places them into an array
 pubkey = keys.split(",")
+
 #testing
 print(pubkey[0])
+
+#Generate private key b with desired bit length
+b = random.randint(1,8)
+gb = pow(int(pubkey[1]),b) % int(pubkey[0])
+print (gb)
+c.send(str(gb).encode())
 
 #Collects input taken from the client
 message = input("You: ")

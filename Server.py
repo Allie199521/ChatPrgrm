@@ -27,6 +27,10 @@ publickeys = str(p) + "," + str(g) + "," + str(ga)
 
 #sends keys to client
 conn.send(publickeys.encode())
+gb = conn.recv(1024).decode()
+
+#testing
+print(gb)
 
 #Prints out the address of who just got connected
 print("Connection from: " + str(addr))
