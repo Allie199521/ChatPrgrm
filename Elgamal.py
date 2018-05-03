@@ -41,28 +41,20 @@ def generateKey(bit):
     return p,a,g,apub
 
 
-def encrypt(p,g,ga,letter,encrypt_txt):
-    #change the letter into a number
-    m = ord(letter)
+def encrypt(p,g,ga,key):
     #generate a random private key
     k = random.randint(1,p-1)
-    beta = pow(g,k) % p
-    alpha = m * pow(ga,k)
-    encrypt_txt.write(str(beta) + "," + str(alpha) + "\n")
+    beta = pow(g,k,p)
+    alpha = key * pow(ga,k, p)
+    return alpha
 
-def decrypt(p,a,decrypt_txt,read):
-    for line in read:
-        # split the cipher from the half mask
-        point = line.split(",")
-        gb = int(point[0])
-        c = int(point[1])
-        # calulate the fullmask
-        full = pow(gb, a) % p
-        # calulatethe inverse of the half mask
-        neg_full = pulverizer(full, p)
-        # decrypt the message
-        m = (c * neg_full) % p
-        decrypt_txt.write(chr(m))
+def decrypt(p,enkey,gab):
+    c = enkey
+    # calulatethe inverse of the half mask
+    neg_full = pulverizer(gab, p)
+    # decrypt the message
+    m = (c * neg_full) % p
+    return m
 
 
 # Makes sure the number generated is a prime
@@ -102,6 +94,3 @@ def main ():
     decrypt_txt.close()
     read.close()
     message.close()
-
-
-main()

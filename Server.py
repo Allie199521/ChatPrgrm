@@ -3,7 +3,7 @@ import Elgamal
 from Crypto.Cipher import AES
 import socket
 from os import system 
-import platform
+import platform, random
 
 host = socket.gethostname()
 #Random port number
@@ -25,13 +25,24 @@ p,a,g,ga = Elgamal.generateKey(8)
 #places keys into a string format seperated by commas
 publickeys = str(p) + "," + str(g) + "," + str(ga)
 
+n = random.randint(10, 15)
+key = ''
+
+for i in range(0, n):
+        key = key + str(random.randint(0, 9))
+print(key)
+
 #sends keys to client
 conn.send(publickeys.encode())
+
+#collecting public key from client
 gb = conn.recv(1024).decode()
 
-#testing
-print(gb)
+key = int(key)
 
+print(str(Elgamal.encrypt(p, g, ga, key)))
+
+conn.send(str(Elgamal.encrypt(p, g, ga, key)).encode())
 #Prints out the address of who just got connected
 print("Connection from: " + str(addr))
 
@@ -54,7 +65,7 @@ while data.lower().strip() != 'bye':
 conn.close()
 pf = platform.system()
 
-if(pf == 'Linux' or pf == 'Darwin'):
-	system('clear')
-else:
-	system('cls')
+#if(pf == 'Linux' or pf == 'Darwin'):
+#	system('clear')
+#else:
+#	system('cls')

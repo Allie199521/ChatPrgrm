@@ -19,19 +19,25 @@ c.connect((host, port))
 #recieves public keys from Server
 keys = c.recv(1024).decode()
 
+#aes key from server
+keys2 = c.recv(2048).decode()
+print(keys2)
+
 #splits the keys and places them into an array
 pubkey = keys.split(",")
-
-#testing
-print(pubkey[0])
 
 #Generate private key b with desired bit length
 b = random.randint(1,8)
 gb = pow(int(pubkey[1]),b) % int(pubkey[0])
 
-#testing
-print (gb)
+#full mask sending to decrypt
+gab = pow(int(pubkey[2], b))%int(pubkey[0])
 
+#decrypting the AES key
+keys2 = Elgamal.decrypt(pubkey[0], keys2, gab)
+print(keys2)
+
+#sending the public key of client to server
 c.send(str(gb).encode())
 
 #Collects input taken from the client
