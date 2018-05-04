@@ -46,14 +46,15 @@ def encrypt(p,g,ga,key):
     k = random.randint(1,p-1)
     beta = pow(g,k,p)
     alpha = key * pow(ga,k, p)
+    print(alpha)
     return alpha
 
 def decrypt(p,enkey,gab):
-    c = enkey
     # calulatethe inverse of the half mask
     neg_full = pulverizer(gab, p)
     # decrypt the message
-    m = (c * neg_full) % p
+    m = (enkey * neg_full) % p
+    print(m)
     return m
 
 

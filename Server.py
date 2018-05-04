@@ -25,11 +25,17 @@ p,a,g,ga = Elgamal.generateKey(8)
 #places keys into a string format seperated by commas
 publickeys = str(p) + "," + str(g) + "," + str(ga)
 
+#randomly generate length of our key
 n = random.randint(10, 15)
+
+#create a string to append with random ints
 key = ''
 
+#generate key of length n
 for i in range(0, n):
         key = key + str(random.randint(0, 9))
+
+#test
 print(key)
 
 #sends keys to client
@@ -38,15 +44,15 @@ conn.send(publickeys.encode())
 #collecting public key from client
 gb = conn.recv(1024).decode()
 
+#change key back to an int
 key = int(key)
 
-print(str(Elgamal.encrypt(p, g, ga, key)))
-
+#send the key over to the client encrypted with elgamal
 conn.send(str(Elgamal.encrypt(p, g, ga, key)).encode())
 #Prints out the address of who just got connected
 print("Connection from: " + str(addr))
 
-data = "1"
+data = '1'
 
 while data.lower().strip() != 'bye':
         # receive data stream. it won't accept data packet greater than 1024 bytes
