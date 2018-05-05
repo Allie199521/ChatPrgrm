@@ -6,6 +6,7 @@
 import random
 from fractions import gcd as ez_gcd
 import math
+import sympy as s
 
 #generate both public and private keys with the current bit size
 def generateKey(bit):
@@ -15,24 +16,24 @@ def generateKey(bit):
     # makes sure p is a random generated prime
     if p % 2 == 0:
         p += 1
-    while isPrime(p)== False:
+    while s.isprime(p)== False:
         p = random.getrandbits(bit)
         if p % 2 == 0:
             p += 1
 
-    q = (p - 1)/2
+    q = int((p - 1)/2)
 
     #makes sure the random generated g is a prime generator
     g = random.randint(1,p)
-    while((g % p) == 0 or pow(g,2) % p == 0 or pow(g,q) % p == 0):
+    while((g % p) == 0 or pow(g,2,p) == 0 or pow(g,q,p) == 0):
         g = random.randint(1,p)
 
 
     #Alice public half mask
-    apub = pow(g,a) % p
+    apub = pow(g,a, p)
 
     #Bob public half mask
-    bpub = pow(g,b) % p
+    bpub = pow(g,b, p)
 
     key = open("keys.txt", "w")
     key.write("p = " + str(p) + "\n" + "a = " + str(a) + "\n" + "g^b = " + str(bpub))
@@ -47,7 +48,7 @@ def encrypt(p,g,ga,key):
     beta = pow(g,k,p)
     alpha = key * pow(ga,k, p)
     print(alpha)
-    return alpha
+    return alpha%p
 
 def decrypt(p,enkey,gab):
     # calulatethe inverse of the half mask
@@ -60,7 +61,7 @@ def decrypt(p,enkey,gab):
 
 # Makes sure the number generated is a prime
 def isPrime (a):
-    for i in range(2, int(math.sqrt(a)) + 1):
+    for i in range(2, int(math.sqrt(a)) + 1, 2):
         if a % i == 0:
             return False
     return True
@@ -79,19 +80,3 @@ def pulverizer (e, phi):
         x += hold_phi
 
     return x
-
-def main ():
-    p,a,g,gb = generateKey(8)
-    message = open("Assignment4_5.txt", "r")
-    encrypt_txt = open("encrypt.txt","w")
-    decrypt_txt = open("decrypt.txt", "w")
-    for line in message:
-        for letter in line:
-            encrypt(p,g,gb,letter,encrypt_txt)
-
-    encrypt_txt.close()
-    read = open("encrypt.txt","r")
-    decrypt(p,a,decrypt_txt,read)
-    decrypt_txt.close()
-    read.close()
-    message.close()

@@ -20,23 +20,10 @@ s.listen(2)
 conn, addr = s.accept()
 
 #Creates keys to be sent to Client once connected
-p,a,g,ga = Elgamal.generateKey(8)
+p,a,g,ga = Elgamal.generateKey(64)
 
 #places keys into a string format seperated by commas
 publickeys = str(p) + "," + str(g) + "," + str(ga)
-
-#randomly generate length of our key
-n = random.randint(10, 15)
-
-#create a string to append with random ints
-key = ''
-
-#generate key of length n
-for i in range(0, n):
-        key = key + str(random.randint(0, 9))
-
-#test
-print(key)
 
 #sends keys to client
 conn.send(publickeys.encode())
@@ -44,14 +31,28 @@ conn.send(publickeys.encode())
 #collecting public key from client
 gb = conn.recv(1024).decode()
 
-#change key back to an int
-key = int(key)
+#calculate gab
+gab = pow(int(gb), a, p)
 
-#send the key over to the client encrypted with elgamal
-conn.send(str(Elgamal.encrypt(p, g, ga, key)).encode())
+#test
+print(str(gab))
+
+#turn key to string
+key = str(gab)
+key16 = 'key'
+#set IV
+IV = 16 * '\x00'
+
+#set mode
+mode = AES.MODE_CBC
+
+#set encrypt to new AES
+encrypt = AES.new(key16, mode, IV=IV)
+
 #Prints out the address of who just got connected
 print("Connection from: " + str(addr))
 
+#set data to 1 so the while loop runs
 data = '1'
 
 while data.lower().strip() != 'bye':
