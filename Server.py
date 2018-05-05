@@ -34,12 +34,9 @@ gb = conn.recv(1024).decode()
 #calculate gab
 gab = pow(int(gb), a, p)
 
-#test
-print(str(gab))
-
 #turn key to string
-key = str(gab)
-key16 = 'key'
+key = gab.to_bytes(32, 'little')
+
 #set IV
 IV = 16 * '\x00'
 
@@ -47,7 +44,8 @@ IV = 16 * '\x00'
 mode = AES.MODE_CBC
 
 #set encrypt to new AES
-encrypt = AES.new(key16, mode, IV=IV)
+encryption = AES.new(key, mode, IV=IV)
+decryption = AES.new(key, mode, IV=IV)
 
 #Prints out the address of who just got connected
 print("Connection from: " + str(addr))
@@ -56,17 +54,22 @@ print("Connection from: " + str(addr))
 data = '1'
 
 while data.lower().strip() != 'bye':
-        # receive data stream. it won't accept data packet greater than 1024 bytes
-    #
-    data = conn.recv(1024).decode()
+    # receive data stream. it won't accept data packet greater than 1024 bytes
+    data = decryption.decrypt(conn.recv(1024)).strip().decode()
     #If no data is recieved, break
     if not data:
         break
     #Print what the client has sent
     print("client: " + str(data))
     data = input("You: ")
+
+    l = len(data)
+    if l%16 != 0:
+        data = data + ' '*(16-l%16)
+    data = encryption.encrypt(data)
+
     #send the data to the client in bytes
-    conn.send(data.encode())
+    conn.send(data)
 
 #closes connection
 conn.close()

@@ -28,25 +28,53 @@ gb = pow(int(pubkey[1]),b) % int(pubkey[0])
 
 #full mask sending to decrypt
 gab = pow(int(pubkey[2]), b)%int(pubkey[0])
+
+#test
 print(str(gab))
+
 #sending the public key of client to server
 c.send(str(gb).encode())
 
+#make aes key
+key = gab.to_bytes(32, 'little')
+
+#set IV
+IV = 16 * '\x00'
+
+#set mode
+mode = AES.MODE_CBC
+
+#set encrypt 
+encryption = AES.new(key, mode, IV=IV)
+decryption = AES.new(key, mode, IV=IV)
+
 #Collects input taken from the client
-message = input("You: ")
+message = '1'
 
 #If the message submitted by the client is not "bye"
-while message.lower().strip() != 'bye':
-    #Change message into byte size and send to server
-    c.send(message.encode())
-    #collects the servers message and change it to a string
-    data = c.recv(1024).decode()
-
-    #Print on the terminal what the server has sent
-    print('server: ' + data)
-
+while 1:
     #Prompts client again for input and assign message to the new input
     message = input("You: ")
+
+    #find the length of the message
+    l = len(message)
+
+    #make sure that the message is evenly divisibl by 16
+    if l%16 != 0:
+        message = message + ' '*(16-l%16)
+
+    #encrypt
+    message = encryption.encrypt(message).strip()
+    if message == "bye":
+         break
+
+    #Change message into byte size and send to server
+    c.send(message)
+
+    #collects the servers message and change it to a string
+    data = decryption.decrypt(c.recv(1024)).strip().decode()
+    #Print on the terminal what the server has sent
+    print("server: " + str(data))
 
 #closes client connection
 c.close()
