@@ -51,9 +51,8 @@ decryption = AES.new(key, mode, IV=IV)
 print("Connection from: " + str(addr))
 
 #set data to 1 so the while loop runs
-data = '1'
 
-while data.lower().strip() != 'bye':
+while 1:
     # receive data stream. it won't accept data packet greater than 1024 bytes
     data = decryption.decrypt(conn.recv(1024)).strip().decode()
     #If no data is recieved, break
@@ -62,6 +61,8 @@ while data.lower().strip() != 'bye':
     #Print what the client has sent
     print("client: " + str(data))
     data = input("You: ")
+    if '~' in data:
+        break
 
     l = len(data)
     if l%16 != 0:

@@ -6,11 +6,11 @@ import random
 import Elgamal
 from Crypto.Cipher import AES
 
-
 host = socket.gethostname()
 #Random port number
 port = 12345
 
+#here is the socket, bro
 c = socket.socket()
 
 #Connects to the server
@@ -48,13 +48,12 @@ mode = AES.MODE_CBC
 encryption = AES.new(key, mode, IV=IV)
 decryption = AES.new(key, mode, IV=IV)
 
-#Collects input taken from the client
-message = '1'
-
 #If the message submitted by the client is not "bye"
 while 1:
     #Prompts client again for input and assign message to the new input
     message = input("You: ")
+    if '~' in message:
+        break
 
     #find the length of the message
     l = len(message)
@@ -64,9 +63,7 @@ while 1:
         message = message + ' '*(16-l%16)
 
     #encrypt
-    message = encryption.encrypt(message).strip()
-    if message == "bye":
-         break
+    message = encryption.encrypt(message)
 
     #Change message into byte size and send to server
     c.send(message)
