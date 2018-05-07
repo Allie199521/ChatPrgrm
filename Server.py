@@ -74,9 +74,12 @@ while 1:
 
 #closes connection
 conn.close()
+
+#get the current platform
 pf = platform.system()
 
-#if(pf == 'Linux' or pf == 'Darwin'):
-#	system('clear')
-#else:
-#	system('cls')
+#check to see which command to run to clear
+if(pf == 'Linux' or pf == 'Darwin'):
+	system('clear')
+else:
+	system('cls')
